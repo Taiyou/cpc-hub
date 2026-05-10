@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import LabDetail from '../../../components/sections/LabDetail.astro';
+
+export async function getStaticPaths() {
+  const labs = await getCollection('labs');
+  return labs.map((lab) => ({
+    params: { slug: lab.id },
+    props: { lab },
+  }));
+}
+
+const { lab } = Astro.props;
+---
+<LabDetail lab={lab} locale="ja" />

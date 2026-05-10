@@ -1,0 +1,22 @@
+{
+  "name": "cpc-hub",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "fetch:youtube": "node scripts/fetch-youtube.mjs",
+    "update:videos": "node scripts/fetch-youtube.mjs && astro build"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^5.1.4",
+    "astro": "^5.0.0",
+    "tailwindcss": "^3.4.17"
+  },
+  "packageManager": "pnpm@11.0.9"
+}

@@ -1,0 +1,82 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Layout from '../Layout.astro';
+import ShareButtons from '../ShareButtons.astro';
+import { localizedPath, t, type Locale } from '../../i18n';
+
+interface Props {
+  event: CollectionEntry<'events'>;
+  locale: Locale;
+}
+
+const { event, locale } = Astro.props;
+const { data } = event;
+const { Content } = await render(event);
+
+const title = locale === 'ja' && data.title_ja ? data.title_ja : data.title_en;
+const description =
+  locale === 'ja' && data.description_ja ? data.description_ja : data.description_en;
+const isFallback =
+  locale === 'ja' && (!data.title_ja || !data.description_ja);
+
+const shareUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString(locale === 'ja' ? 'ja-JP' : 'en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+const dateLabel =
+  data.date_start.getTime() === data.date_end.getTime()
+    ? fmt(data.date_start)
+    : `${fmt(data.date_start)} – ${fmt(data.date_end)}`;
+
+const shareText = `${title} — ${dateLabel}, ${data.location}`;
+---
+<Layout
+  locale={locale}
+  title={title}
+  description={description.slice(0, 160)}
+  pathWithoutLocale={`/events/${event.id}/`}
+>
+  <a href={localizedPath(locale, '/events/')} class="text-sm text-ink-muted hover:text-ink no-underline">
+    ← {t(locale, 'nav.events')}
+  </a>
+
+  <article class="mt-6">
+    <p class="text-xs uppercase tracking-wider text-ink-muted mb-3">
+      {data.type} · {data.language}
+    </p>
+    <h1 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">{title}</h1>
+
+    <dl class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2 text-sm mb-8">
+      <dt class="text-ink-muted">{t(locale, 'event.date')}</dt>
+      <dd>{dateLabel}</dd>
+      <dt class="text-ink-muted">{t(locale, 'event.location')}</dt>
+      <dd>{data.location}</dd>
+    </dl>
+
+    <section class="mb-6">
+      <p class="leading-relaxed whitespace-pre-line">{description}</p>
+      {isFallback && (
+        <p class="text-xs text-ink-muted mt-2">{t(locale, 'common.english_only')}</p>
+      )}
+    </section>
+
+    <div class="prose-content text-ink leading-relaxed">
+      <Content />
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-neutral-200">
+      <a href={data.url} class="text-sm text-ink hover:underline" target="_blank" rel="noopener">
+        {t(locale, 'event.details')} ↗
+      </a>
+    </div>
+
+    <div class="mt-6">
+      <ShareButtons url={shareUrl} text={shareText} locale={locale} />
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Hourly fetch + rebuild for the CPC Hub YouTube section.
+
+  Install:
+    cp scripts/com.cpchub.fetch-youtube.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.cpchub.fetch-youtube.plist
+
+  Uninstall:
+    launchctl unload ~/Library/LaunchAgents/com.cpchub.fetch-youtube.plist
+    rm ~/Library/LaunchAgents/com.cpchub.fetch-youtube.plist
+
+  Logs land in <project>/scripts/fetch-youtube.log.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.cpchub.fetch-youtube</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>cd "/Users/hirotaiyohamada/Desktop/05_論文・研究/CPCメディアアーキテクト" &amp;&amp; /usr/local/bin/pnpm update:videos</string>
+  </array>
+
+  <key>StartInterval</key>
+  <integer>3600</integer>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/Users/hirotaiyohamada/Desktop/05_論文・研究/CPCメディアアーキテクト/scripts/fetch-youtube.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/hirotaiyohamada/Desktop/05_論文・研究/CPCメディアアーキテクト/scripts/fetch-youtube.log</string>
+</dict>
+</plist>

@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply text-ink antialiased;
+    font-feature-settings: 'palt' 1;
+  }
+
+  body {
+    @apply bg-white;
+  }
+
+  ::selection {
+    @apply bg-ink text-white;
+  }
+
+  a {
+    @apply underline-offset-4;
+  }
+
+  h1, h2, h3, h4 {
+    @apply tracking-tight;
+  }
+}
+
+@layer components {
+  .prose-content p + p {
+    @apply mt-4;
+  }
+}

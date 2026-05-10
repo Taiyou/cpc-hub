@@ -1,0 +1,119 @@
+---
+import { t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+<figure class="m-0">
+  <svg
+    viewBox="0 0 600 360"
+    role="img"
+    aria-labelledby="cpc-anim-title cpc-anim-desc"
+    class="block w-full h-auto"
+  >
+    <title id="cpc-anim-title">CPC concept</title>
+    <desc id="cpc-anim-desc">
+      Three agents exchange predictive signals; a shared symbol emerges at the center.
+    </desc>
+
+    <g stroke="#1a1a1a" stroke-width="1" opacity="0.25" fill="none">
+      <line x1="300" y1="80" x2="120" y2="270" />
+      <line x1="300" y1="80" x2="480" y2="270" />
+      <line x1="120" y1="270" x2="480" y2="270" />
+    </g>
+
+    <circle
+      cx="300"
+      cy="195"
+      r="44"
+      fill="none"
+      stroke="#1a1a1a"
+      stroke-width="1"
+      stroke-dasharray="2 4"
+      opacity="0.4"
+    >
+      <animate attributeName="r" values="42;50;42" dur="6s" repeatCount="indefinite" />
+    </circle>
+
+    <g class="cpc-particles" fill="#1a1a1a">
+      <circle r="2.5">
+        <animateMotion dur="3s" repeatCount="indefinite" path="M 300 80 L 120 270" />
+      </circle>
+      <circle r="2.5">
+        <animateMotion dur="3.4s" repeatCount="indefinite" path="M 120 270 L 300 80" />
+      </circle>
+      <circle r="2.5">
+        <animateMotion dur="3.2s" repeatCount="indefinite" path="M 300 80 L 480 270" />
+      </circle>
+      <circle r="2.5">
+        <animateMotion dur="3.6s" repeatCount="indefinite" path="M 480 270 L 300 80" />
+      </circle>
+      <circle r="2.5">
+        <animateMotion dur="3.8s" repeatCount="indefinite" path="M 120 270 L 480 270" />
+      </circle>
+      <circle r="2.5">
+        <animateMotion dur="3.4s" repeatCount="indefinite" path="M 480 270 L 120 270" />
+      </circle>
+    </g>
+
+    <g transform="translate(300, 195)">
+      <g>
+        <polygon
+          points="0,-14 12,8 -12,8"
+          fill="none"
+          stroke="#1a1a1a"
+          stroke-width="1.5"
+        />
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from="0 0 0"
+          to="360 0 0"
+          dur="22s"
+          repeatCount="indefinite"
+        />
+      </g>
+      <circle r="3" fill="#1a1a1a" />
+    </g>
+
+    <g transform="translate(300, 80)">
+      <circle r="32" fill="white" stroke="#1a1a1a" stroke-width="1" class="cpc-pulse-1" />
+      <circle r="20" fill="white" stroke="#1a1a1a" stroke-width="1" class="cpc-pulse-2" />
+      <circle r="7" fill="#1a1a1a" />
+    </g>
+    <g transform="translate(120, 270)">
+      <circle r="32" fill="white" stroke="#1a1a1a" stroke-width="1" class="cpc-pulse-3" />
+      <circle r="20" fill="white" stroke="#1a1a1a" stroke-width="1" class="cpc-pulse-1" />
+      <circle r="7" fill="#1a1a1a" />
+    </g>
+    <g transform="translate(480, 270)">
+      <circle r="32" fill="white" stroke="#1a1a1a" stroke-width="1" class="cpc-pulse-2" />
+      <circle r="20" fill="white" stroke="#1a1a1a" stroke-width="1" class="cpc-pulse-3" />
+      <circle r="7" fill="#1a1a1a" />
+    </g>
+  </svg>
+  <figcaption class="text-xs text-ink-muted text-center mt-3 leading-relaxed">
+    {t(locale, 'home.cpc.caption')}
+  </figcaption>
+</figure>
+
+<style>
+  @keyframes cpc-pulse {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 1; }
+  }
+  .cpc-pulse-1 { animation: cpc-pulse 2.4s ease-in-out infinite; }
+  .cpc-pulse-2 { animation: cpc-pulse 2.8s ease-in-out infinite 0.5s; }
+  .cpc-pulse-3 { animation: cpc-pulse 3.2s ease-in-out infinite 1s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cpc-pulse-1, .cpc-pulse-2, .cpc-pulse-3 {
+      animation: none;
+      opacity: 0.75;
+    }
+    .cpc-particles { display: none; }
+  }
+</style>

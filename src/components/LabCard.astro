@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { localizedPath, t, type Locale } from '../i18n';
+
+interface Props {
+  lab: CollectionEntry<'labs'>;
+  locale: Locale;
+}
+
+const { lab, locale } = Astro.props;
+const { data } = lab;
+const href = localizedPath(locale, `/labs/${lab.id}/`);
+const name = locale === 'ja' && data.name_ja ? data.name_ja : data.name_en;
+const description =
+  locale === 'ja' && data.description_ja ? data.description_ja : data.description_en;
+const isFallback = locale === 'ja' && (!data.name_ja || !data.description_ja);
+---
+<a
+  href={href}
+  class="block border border-neutral-200 rounded-lg p-5 hover:border-ink transition-colors no-underline group"
+>
+  <div class="text-xs uppercase tracking-wider text-ink-muted mb-1">
+    {data.institution} · {data.country}
+  </div>
+  <h3 class="text-base font-semibold leading-snug mb-1 group-hover:underline">
+    {name}
+  </h3>
+  <p class="text-sm text-ink-muted mb-3">PI: {data.pi}</p>
+  <p class="text-sm leading-relaxed line-clamp-3">
+    {description}
+  </p>
+  {isFallback && (
+    <p class="text-xs text-ink-muted mt-2">{t(locale, 'common.english_only')}</p>
+  )}
+  <div class="flex flex-wrap gap-1.5 mt-3">
+    {data.focus_areas.map((a) => (
+      <span class="text-[11px] px-2 py-0.5 border border-neutral-300 rounded text-ink-muted">
+        {a}
+      </span>
+    ))}
+  </div>
+</a>

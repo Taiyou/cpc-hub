@@ -1,0 +1,304 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../Layout.astro';
+import PaperCard from '../PaperCard.astro';
+import LabCard from '../LabCard.astro';
+import EventCard from '../EventCard.astro';
+import VideoCard, { type VideoItem } from '../VideoCard.astro';
+import videosData from '../../data/videos.json';
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const papers = (await getCollection('papers')).sort(
+  (a, b) => +b.data.date_added - +a.data.date_added
+);
+const labs = await getCollection('labs');
+const events = (await getCollection('events')).sort(
+  (a, b) => +b.data.date_start - +a.data.date_start
+);
+const videos = ((videosData.items ?? []) as VideoItem[]).slice().sort(
+  (a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt)
+);
+
+const norm = (s: string | undefined | null) => (s ?? '').toLowerCase();
+
+const paperHaystacks = papers.map((p) =>
+  [
+    p.data.title,
+    p.data.authors.join(' '),
+    p.data.venue,
+    String(p.data.year),
+    p.data.arxiv_id ?? '',
+    p.data.doi ?? '',
+    p.data.abstract_en,
+    p.data.summary_ja ?? '',
+    p.data.schools.join(' '),
+    (p.data.methods ?? []).join(' '),
+  ]
+    .map(norm)
+    .join(' \n ')
+);
+
+const labHaystacks = labs.map((l) =>
+  [
+    l.data.name_en,
+    l.data.name_ja ?? '',
+    l.data.pi,
+    l.data.institution,
+    l.data.country,
+    l.data.description_en,
+    l.data.description_ja ?? '',
+    l.data.focus_areas.join(' '),
+  ]
+    .map(norm)
+    .join(' \n ')
+);
+
+const eventHaystacks = events.map((e) =>
+  [
+    e.data.title_en,
+    e.data.title_ja ?? '',
+    e.data.type,
+    e.data.location,
+    e.data.language,
+    e.data.description_en,
+    e.data.description_ja ?? '',
+  ]
+    .map(norm)
+    .join(' \n ')
+);
+
+const videoHaystacks = videos.map((v) =>
+  [
+    v.title,
+    v.description,
+    v.channelTitle,
+    (v.matchedQueries ?? []).join(' '),
+  ]
+    .map(norm)
+    .join(' \n ')
+);
+---
+<Layout
+  locale={locale}
+  pathWithoutLocale="/search/"
+  title={t(locale, 'search.heading')}
+>
+  <header class="py-8 border-b border-neutral-200 mb-8">
+    <h1 class="text-3xl font-semibold mb-2">{t(locale, 'search.heading')}</h1>
+    <p class="text-ink-muted mb-6">{t(locale, 'search.intro')}</p>
+
+    <div class="flex flex-col gap-3">
+      <div class="relative">
+        <svg
+          class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          id="search-input"
+          type="search"
+          autocomplete="off"
+          autofocus
+          placeholder={t(locale, 'search.placeholder')}
+          class="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg text-base focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink"
+        />
+      </div>
+
+      <div class="flex flex-wrap gap-2 items-center">
+        <div id="filters" class="flex flex-wrap gap-1 text-sm">
+          <button
+            type="button"
+            class="px-3 py-1 rounded-full border border-ink bg-ink text-white"
+            data-filter="all"
+            data-active="true"
+          >{t(locale, 'search.filter.all')}</button>
+          <button
+            type="button"
+            class="px-3 py-1 rounded-full border border-neutral-300 text-ink-muted hover:border-ink hover:text-ink"
+            data-filter="papers"
+          >{t(locale, 'search.filter.papers')}</button>
+          <button
+            type="button"
+            class="px-3 py-1 rounded-full border border-neutral-300 text-ink-muted hover:border-ink hover:text-ink"
+            data-filter="labs"
+          >{t(locale, 'search.filter.labs')}</button>
+          <button
+            type="button"
+            class="px-3 py-1 rounded-full border border-neutral-300 text-ink-muted hover:border-ink hover:text-ink"
+            data-filter="events"
+          >{t(locale, 'search.filter.events')}</button>
+          <button
+            type="button"
+            class="px-3 py-1 rounded-full border border-neutral-300 text-ink-muted hover:border-ink hover:text-ink"
+            data-filter="videos"
+          >{t(locale, 'search.filter.videos')}</button>
+        </div>
+        <span class="ml-auto text-sm text-ink-muted" id="result-count" aria-live="polite"></span>
+      </div>
+    </div>
+  </header>
+
+  <div id="search-empty" class="py-16 text-center text-ink-muted hidden">
+    {t(locale, 'search.empty')}
+  </div>
+
+  <section data-section="papers" class="mb-10">
+    <h2 class="text-sm uppercase tracking-wider text-ink-muted mb-4">
+      {t(locale, 'search.section.papers')}
+      <span class="ml-1 text-ink-muted/70" data-section-count></span>
+    </h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {papers.map((p, i) => (
+        <div class="search-result" data-type="papers" data-haystack={paperHaystacks[i]}>
+          <PaperCard paper={p} locale={locale} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section data-section="labs" class="mb-10">
+    <h2 class="text-sm uppercase tracking-wider text-ink-muted mb-4">
+      {t(locale, 'search.section.labs')}
+      <span class="ml-1 text-ink-muted/70" data-section-count></span>
+    </h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {labs.map((l, i) => (
+        <div class="search-result" data-type="labs" data-haystack={labHaystacks[i]}>
+          <LabCard lab={l} locale={locale} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section data-section="events" class="mb-10">
+    <h2 class="text-sm uppercase tracking-wider text-ink-muted mb-4">
+      {t(locale, 'search.section.events')}
+      <span class="ml-1 text-ink-muted/70" data-section-count></span>
+    </h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {events.map((e, i) => (
+        <div class="search-result" data-type="events" data-haystack={eventHaystacks[i]}>
+          <EventCard event={e} locale={locale} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section data-section="videos" class="mb-10">
+    <h2 class="text-sm uppercase tracking-wider text-ink-muted mb-4">
+      {t(locale, 'search.section.videos')}
+      <span class="ml-1 text-ink-muted/70" data-section-count></span>
+    </h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {videos.map((v, i) => (
+        <div class="search-result" data-type="videos" data-haystack={videoHaystacks[i]}>
+          <VideoCard video={v} locale={locale} />
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<script is:inline define:vars={{ locale }}>
+  (() => {
+    const input = document.getElementById('search-input');
+    const filters = document.getElementById('filters');
+    const empty = document.getElementById('search-empty');
+    const counter = document.getElementById('result-count');
+    const sections = Array.from(document.querySelectorAll('[data-section]'));
+    const results = Array.from(document.querySelectorAll('.search-result'));
+    if (!input || !filters || !empty || !counter) return;
+
+    const messages = {
+      en: {
+        results: (n) => (n === 1 ? '1 result' : `${n} results`),
+        start: 'Type to search.',
+      },
+      ja: {
+        results: (n) => `${n} 件`,
+        start: 'キーワードを入力してください。',
+      },
+    };
+    const msg = messages[locale] || messages.en;
+
+    let activeFilter = 'all';
+    const url = new URL(window.location.href);
+    const initialQuery = url.searchParams.get('q') || '';
+    if (initialQuery) input.value = initialQuery;
+
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      let visibleTotal = 0;
+      const counts = { papers: 0, labs: 0, events: 0, videos: 0 };
+
+      for (const el of results) {
+        const type = el.dataset.type;
+        const matchType = activeFilter === 'all' || activeFilter === type;
+        const matchQuery = q === '' || (el.dataset.haystack || '').includes(q);
+        const visible = matchType && matchQuery;
+        el.classList.toggle('hidden', !visible);
+        if (visible) {
+          visibleTotal++;
+          counts[type] = (counts[type] || 0) + 1;
+        }
+      }
+
+      for (const section of sections) {
+        const type = section.dataset.section;
+        const c = counts[type] || 0;
+        section.classList.toggle('hidden', c === 0);
+        const span = section.querySelector('[data-section-count]');
+        if (span) span.textContent = c > 0 ? `(${c})` : '';
+      }
+
+      if (q === '' && activeFilter === 'all') {
+        counter.textContent = msg.start;
+        empty.classList.add('hidden');
+      } else if (visibleTotal === 0) {
+        counter.textContent = msg.results(0);
+        empty.classList.remove('hidden');
+      } else {
+        counter.textContent = msg.results(visibleTotal);
+        empty.classList.add('hidden');
+      }
+
+      const next = new URL(window.location.href);
+      if (q) next.searchParams.set('q', q); else next.searchParams.delete('q');
+      window.history.replaceState({}, '', next);
+    };
+
+    input.addEventListener('input', apply);
+
+    filters.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-filter]');
+      if (!btn) return;
+      activeFilter = btn.dataset.filter;
+      for (const b of filters.querySelectorAll('button[data-filter]')) {
+        const active = b === btn;
+        b.dataset.active = active ? 'true' : 'false';
+        b.classList.toggle('bg-ink', active);
+        b.classList.toggle('text-white', active);
+        b.classList.toggle('border-ink', active);
+        b.classList.toggle('border-neutral-300', !active);
+        b.classList.toggle('text-ink-muted', !active);
+      }
+      apply();
+    });
+
+    apply();
+  })();
+</script>

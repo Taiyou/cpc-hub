@@ -1,0 +1,16 @@
+{
+  "name": "slides",
+  "version": "1.0.0",
+  "main": "generate.js",
+  "type": "module",
+  "scripts": {
+    "build": "node generate.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}

@@ -1,0 +1,19 @@
+---
+import { localizedPath, otherLocale, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  pathWithoutLocale: string;
+}
+
+const { locale, pathWithoutLocale } = Astro.props;
+const target = otherLocale(locale);
+const targetHref = localizedPath(target, pathWithoutLocale);
+const currentLabel = locale === 'en' ? 'EN' : 'JA';
+const targetLabel = target === 'en' ? 'EN' : 'JA';
+---
+<div class="flex items-center text-xs font-medium text-ink-muted gap-1">
+  <span class="text-ink">{currentLabel}</span>
+  <span aria-hidden="true">/</span>
+  <a href={targetHref} class="no-underline hover:text-ink">{targetLabel}</a>
+</div>

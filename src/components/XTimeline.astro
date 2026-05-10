@@ -1,0 +1,55 @@
+---
+import { t, type Locale } from '../i18n';
+
+interface Props {
+  handle: string;
+  locale: Locale;
+}
+
+const { handle, locale } = Astro.props;
+const profileUrl = `https://twitter.com/${handle}`;
+const xUrl = `https://x.com/${handle}`;
+---
+<div class="border border-neutral-200 rounded-lg bg-white p-6 flex flex-col gap-4">
+  <div class="flex items-center gap-3">
+    <div
+      class="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        class="w-5 h-5"
+        fill="currentColor"
+      >
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    </div>
+    <div class="min-w-0">
+      <p class="font-semibold leading-tight truncate">@{handle}</p>
+      <p class="text-xs text-ink-muted">X (formerly Twitter)</p>
+    </div>
+  </div>
+
+  <p class="text-sm text-ink-muted leading-relaxed">
+    {t(locale, 'home.section.x.embed_note')}
+  </p>
+
+  <div class="flex flex-col gap-2">
+    <a
+      href={xUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-black text-white rounded-md text-sm font-medium no-underline hover:bg-neutral-800 transition-colors"
+    >
+      {t(locale, 'home.section.x.cta')} →
+    </a>
+    <a
+      href={`${profileUrl}?ref_src=twsrc%5Etfw`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center justify-center gap-2 px-4 py-2 border border-neutral-300 rounded-md text-sm text-ink no-underline hover:border-ink transition-colors"
+    >
+      {t(locale, 'home.section.x.follow')}
+    </a>
+  </div>
+</div>

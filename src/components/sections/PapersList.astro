@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../Layout.astro';
+import PaperCard from '../PaperCard.astro';
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const papers = (await getCollection('papers')).sort(
+  (a, b) => +b.data.date_added - +a.data.date_added
+);
+---
+<Layout locale={locale} pathWithoutLocale="/papers/" title={t(locale, 'papers.heading')}>
+  <header class="py-8 border-b border-neutral-200 mb-8">
+    <h1 class="text-3xl font-semibold mb-2">{t(locale, 'papers.heading')}</h1>
+    <p class="text-ink-muted">{t(locale, 'papers.intro')}</p>
+  </header>
+  <div class="grid gap-4 sm:grid-cols-2">
+    {papers.map((p) => <PaperCard paper={p} locale={locale} />)}
+  </div>
+</Layout>

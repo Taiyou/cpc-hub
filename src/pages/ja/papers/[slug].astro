@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import PaperDetail from '../../../components/sections/PaperDetail.astro';
+
+export async function getStaticPaths() {
+  const papers = await getCollection('papers');
+  return papers.map((paper) => ({
+    params: { slug: paper.id },
+    props: { paper },
+  }));
+}
+
+const { paper } = Astro.props;
+---
+<PaperDetail paper={paper} locale="ja" />

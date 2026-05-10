@@ -1,0 +1,89 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Layout from '../Layout.astro';
+import ShareButtons from '../ShareButtons.astro';
+import { localizedPath, t, type Locale } from '../../i18n';
+
+interface Props {
+  paper: CollectionEntry<'papers'>;
+  locale: Locale;
+}
+
+const { paper, locale } = Astro.props;
+const { data } = paper;
+const { Content } = await render(paper);
+
+const showJa = locale === 'ja' && !!data.summary_ja;
+
+const shareUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const firstAuthor = data.authors[0]?.split(',')[0] ?? '';
+const authorTag = data.authors.length > 1 ? `${firstAuthor} et al.` : firstAuthor;
+const shareText = `${data.title}${authorTag ? ` — ${authorTag}` : ''} (${data.year})`;
+---
+<Layout
+  locale={locale}
+  title={data.title}
+  description={data.abstract_en.slice(0, 160)}
+  pathWithoutLocale={`/papers/${paper.id}/`}
+>
+  <a href={localizedPath(locale, '/papers/')} class="text-sm text-ink-muted hover:text-ink no-underline">
+    ← {t(locale, 'nav.papers')}
+  </a>
+
+  <article class="mt-6">
+    <p class="text-xs uppercase tracking-wider text-ink-muted mb-3">
+      {data.year} · {data.venue}
+    </p>
+    <h1 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">{data.title}</h1>
+    <p class="text-ink-muted mb-6">{data.authors.join(', ')}</p>
+
+    <div class="flex flex-wrap gap-2 mb-8">
+      {data.schools.map((s) => (
+        <span class="text-xs px-2 py-1 border border-neutral-300 rounded text-ink-muted">{s}</span>
+      ))}
+      {data.methods?.map((m) => (
+        <span class="text-xs px-2 py-1 bg-neutral-100 rounded text-ink-muted">{m}</span>
+      ))}
+    </div>
+
+    {showJa && (
+      <section class="mb-8">
+        <h2 class="text-sm uppercase tracking-wider text-ink-muted mb-2">
+          {t(locale, 'paper.summary_ja')}
+        </h2>
+        <p class="leading-relaxed">{data.summary_ja}</p>
+      </section>
+    )}
+
+    <section class="mb-8">
+      <h2 class="text-sm uppercase tracking-wider text-ink-muted mb-2">
+        {t(locale, 'paper.abstract')}
+        {locale === 'ja' && !data.summary_ja && (
+          <span class="ml-1 normal-case tracking-normal">{t(locale, 'common.english_only')}</span>
+        )}
+      </h2>
+      <p class="leading-relaxed whitespace-pre-line">{data.abstract_en}</p>
+    </section>
+
+    <div class="prose-content text-ink leading-relaxed">
+      <Content />
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-neutral-200 flex flex-wrap gap-4 text-sm">
+      <a href={data.url} class="text-ink hover:underline" target="_blank" rel="noopener">
+        {t(locale, 'paper.external')} ↗
+      </a>
+      {data.arxiv_id && (
+        <span class="text-ink-muted">arXiv: {data.arxiv_id}</span>
+      )}
+      {data.doi && (
+        <span class="text-ink-muted">DOI: {data.doi}</span>
+      )}
+    </div>
+
+    <div class="mt-6">
+      <ShareButtons url={shareUrl} text={shareText} locale={locale} />
+    </div>
+  </article>
+</Layout>

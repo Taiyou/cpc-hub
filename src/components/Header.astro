@@ -1,0 +1,68 @@
+---
+import LangSwitcher from './LangSwitcher.astro';
+import { t, localizedPath, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  pathWithoutLocale: string;
+}
+
+const { locale, pathWithoutLocale } = Astro.props;
+
+const navItems = [
+  { key: 'nav.papers', href: '/papers/' },
+  { key: 'nav.labs', href: '/labs/' },
+  { key: 'nav.events', href: '/events/' },
+  { key: 'nav.videos', href: '/videos/' },
+] as const;
+
+const currentPath = pathWithoutLocale;
+---
+<header class="border-b border-neutral-200 bg-white">
+  <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
+    <a
+      href={localizedPath(locale, '/')}
+      class="text-lg font-semibold tracking-tight no-underline"
+    >
+      CPC Hub
+    </a>
+    <nav class="flex items-center gap-6 text-sm">
+      {navItems.map((item) => {
+        const href = localizedPath(locale, item.href);
+        const active = currentPath.startsWith(item.href);
+        return (
+          <a
+            href={href}
+            class={`no-underline transition-colors ${active ? 'text-ink' : 'text-ink-muted hover:text-ink'}`}
+            aria-current={active ? 'page' : undefined}
+          >
+            {t(locale, item.key)}
+          </a>
+        );
+      })}
+      <a
+        href={localizedPath(locale, '/search/')}
+        class={`flex items-center gap-1 no-underline transition-colors ${
+          currentPath.startsWith('/search/') ? 'text-ink' : 'text-ink-muted hover:text-ink'
+        }`}
+        aria-label={t(locale, 'nav.search')}
+      >
+        <svg
+          class="w-4 h-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <span class="sr-only sm:not-sr-only">{t(locale, 'nav.search')}</span>
+      </a>
+      <LangSwitcher locale={locale} pathWithoutLocale={pathWithoutLocale} />
+    </nav>
+  </div>
+</header>

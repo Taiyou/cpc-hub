@@ -1,0 +1,70 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Layout from '../Layout.astro';
+import ShareButtons from '../ShareButtons.astro';
+import { localizedPath, t, type Locale } from '../../i18n';
+
+interface Props {
+  lab: CollectionEntry<'labs'>;
+  locale: Locale;
+}
+
+const { lab, locale } = Astro.props;
+const { data } = lab;
+const { Content } = await render(lab);
+
+const name = locale === 'ja' && data.name_ja ? data.name_ja : data.name_en;
+const description =
+  locale === 'ja' && data.description_ja ? data.description_ja : data.description_en;
+const isFallback =
+  locale === 'ja' && (!data.name_ja || !data.description_ja);
+
+const shareUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const shareText = `${name} — ${data.institution}`;
+---
+<Layout
+  locale={locale}
+  title={name}
+  description={description.slice(0, 160)}
+  pathWithoutLocale={`/labs/${lab.id}/`}
+>
+  <a href={localizedPath(locale, '/labs/')} class="text-sm text-ink-muted hover:text-ink no-underline">
+    ← {t(locale, 'nav.labs')}
+  </a>
+
+  <article class="mt-6">
+    <p class="text-xs uppercase tracking-wider text-ink-muted mb-3">
+      {data.institution} · {data.country}
+    </p>
+    <h1 class="text-3xl sm:text-4xl font-semibold leading-tight mb-2">{name}</h1>
+    <p class="text-ink-muted mb-6">PI: {data.pi}</p>
+
+    <div class="flex flex-wrap gap-2 mb-8">
+      {data.focus_areas.map((a) => (
+        <span class="text-xs px-2 py-1 border border-neutral-300 rounded text-ink-muted">{a}</span>
+      ))}
+    </div>
+
+    <section class="mb-6">
+      <p class="leading-relaxed whitespace-pre-line">{description}</p>
+      {isFallback && (
+        <p class="text-xs text-ink-muted mt-2">{t(locale, 'common.english_only')}</p>
+      )}
+    </section>
+
+    <div class="prose-content text-ink leading-relaxed">
+      <Content />
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-neutral-200">
+      <a href={data.homepage} class="text-sm text-ink hover:underline" target="_blank" rel="noopener">
+        {t(locale, 'lab.homepage')} ↗
+      </a>
+    </div>
+
+    <div class="mt-6">
+      <ShareButtons url={shareUrl} text={shareText} locale={locale} />
+    </div>
+  </article>
+</Layout>

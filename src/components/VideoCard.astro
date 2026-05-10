@@ -1,0 +1,67 @@
+---
+import type { Locale } from '../i18n';
+import { t } from '../i18n';
+
+export interface VideoItem {
+  videoId: string;
+  title: string;
+  description: string;
+  channelTitle: string;
+  channelId: string;
+  publishedAt: string;
+  thumbnail: string | null;
+  matchedQueries: string[];
+}
+
+interface Props {
+  video: VideoItem;
+  locale: Locale;
+}
+
+const { video, locale } = Astro.props;
+const watchUrl = `https://www.youtube.com/watch?v=${video.videoId}`;
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleDateString(locale === 'ja' ? 'ja-JP' : 'en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+---
+<a
+  href={watchUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="block border border-neutral-200 rounded-lg overflow-hidden hover:border-ink transition-colors no-underline group"
+>
+  {video.thumbnail && (
+    <div class="aspect-video bg-neutral-100 overflow-hidden">
+      <img
+        src={video.thumbnail}
+        alt=""
+        loading="lazy"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  )}
+  <div class="p-5">
+    <div class="text-xs uppercase tracking-wider text-ink-muted mb-1">
+      {video.channelTitle} · {fmt(video.publishedAt)}
+    </div>
+    <h3 class="text-base font-semibold leading-snug mb-2 group-hover:underline line-clamp-2">
+      {video.title}
+    </h3>
+    {video.description && (
+      <p class="text-sm text-ink-muted leading-relaxed line-clamp-2 mb-3">
+        {video.description}
+      </p>
+    )}
+    <div class="flex flex-wrap gap-1">
+      {video.matchedQueries.map((q) => (
+        <span class="text-[11px] px-2 py-0.5 rounded bg-neutral-100 text-ink-muted">
+          {q}
+        </span>
+      ))}
+    </div>
+    <p class="text-xs text-ink-muted mt-3">{t(locale, 'videos.watch')} →</p>
+  </div>
+</a>

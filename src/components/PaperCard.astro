@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { localizedPath, t, type Locale } from '../i18n';
+
+interface Props {
+  paper: CollectionEntry<'papers'>;
+  locale: Locale;
+}
+
+const { paper, locale } = Astro.props;
+const { data } = paper;
+const href = localizedPath(locale, `/papers/${paper.id}/`);
+const authors =
+  data.authors.length > 3
+    ? `${data.authors.slice(0, 3).join(', ')}, et al.`
+    : data.authors.join(', ');
+const summary =
+  locale === 'ja' && data.summary_ja ? data.summary_ja : data.abstract_en;
+const isFallback = locale === 'ja' && !data.summary_ja;
+---
+<a
+  href={href}
+  class="block border border-neutral-200 rounded-lg p-5 hover:border-ink transition-colors no-underline group"
+>
+  <div class="flex items-baseline justify-between gap-3 mb-1">
+    <span class="text-xs uppercase tracking-wider text-ink-muted">{data.year} · {data.venue}</span>
+    {data.featured && (
+      <span class="text-[10px] uppercase tracking-wider text-ink bg-neutral-100 px-2 py-0.5 rounded">
+        Featured
+      </span>
+    )}
+  </div>
+  <h3 class="text-base font-semibold leading-snug mb-2 group-hover:underline">
+    {data.title}
+  </h3>
+  <p class="text-sm text-ink-muted mb-3">{authors}</p>
+  <p class="text-sm leading-relaxed line-clamp-3">
+    {summary}
+  </p>
+  {isFallback && (
+    <p class="text-xs text-ink-muted mt-2">{t(locale, 'common.english_only')}</p>
+  )}
+  <div class="flex flex-wrap gap-1.5 mt-3">
+    {data.schools.map((s) => (
+      <span class="text-[11px] px-2 py-0.5 border border-neutral-300 rounded text-ink-muted">
+        {s}
+      </span>
+    ))}
+  </div>
+</a>

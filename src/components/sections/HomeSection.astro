@@ -1,0 +1,122 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../Layout.astro';
+import PaperCard from '../PaperCard.astro';
+import LabCard from '../LabCard.astro';
+import EventCard from '../EventCard.astro';
+import VideoCard, { type VideoItem } from '../VideoCard.astro';
+import XTimeline from '../XTimeline.astro';
+import CPCAnimation from '../CPCAnimation.astro';
+import videosData from '../../data/videos.json';
+import { localizedPath, t, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const papers = (await getCollection('papers'))
+  .sort((a, b) => +b.data.date_added - +a.data.date_added)
+  .slice(0, 3);
+
+const labs = (await getCollection('labs')).slice(0, 3);
+
+const today = new Date();
+const events = (await getCollection('events'))
+  .filter((e) => +e.data.date_end >= +today)
+  .sort((a, b) => +a.data.date_start - +b.data.date_start)
+  .slice(0, 3);
+
+const videos = ((videosData.items ?? []) as VideoItem[]).slice(0, 3);
+---
+<Layout locale={locale} pathWithoutLocale="/">
+  <section class="py-10 sm:py-14 border-b border-neutral-200">
+    <div class="grid items-center gap-8 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-12">
+      <div>
+        <p class="text-sm uppercase tracking-widest text-ink-muted mb-3">CPC Hub</p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.1] mb-5">
+          {t(locale, 'home.hero.heading')}
+        </h1>
+        <p class="text-lg text-ink-muted leading-relaxed">
+          {t(locale, 'home.hero.body')}
+        </p>
+      </div>
+      <div class="md:max-w-md md:mx-auto w-full">
+        <CPCAnimation locale={locale} />
+      </div>
+    </div>
+  </section>
+
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
+    <div class="min-w-0">
+      <section class="py-10">
+        <div class="flex items-baseline justify-between mb-5">
+          <h2 class="text-xl font-semibold">{t(locale, 'home.section.papers')}</h2>
+          <a href={localizedPath(locale, '/papers/')} class="text-sm text-ink-muted hover:text-ink no-underline">
+            {t(locale, 'common.view_all')} →
+          </a>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          {papers.map((p) => <PaperCard paper={p} locale={locale} />)}
+        </div>
+      </section>
+
+      <section class="py-10 border-t border-neutral-200">
+        <div class="flex items-baseline justify-between mb-5">
+          <h2 class="text-xl font-semibold">{t(locale, 'home.section.labs')}</h2>
+          <a href={localizedPath(locale, '/labs/')} class="text-sm text-ink-muted hover:text-ink no-underline">
+            {t(locale, 'common.view_all')} →
+          </a>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          {labs.map((l) => <LabCard lab={l} locale={locale} />)}
+        </div>
+      </section>
+
+      {events.length > 0 && (
+        <section class="py-10 border-t border-neutral-200">
+          <div class="flex items-baseline justify-between mb-5">
+            <h2 class="text-xl font-semibold">{t(locale, 'home.section.events')}</h2>
+            <a href={localizedPath(locale, '/events/')} class="text-sm text-ink-muted hover:text-ink no-underline">
+              {t(locale, 'common.view_all')} →
+            </a>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            {events.map((e) => <EventCard event={e} locale={locale} />)}
+          </div>
+        </section>
+      )}
+
+      {videos.length > 0 && (
+        <section class="py-10 border-t border-neutral-200">
+          <div class="flex items-baseline justify-between mb-5">
+            <h2 class="text-xl font-semibold">{t(locale, 'home.section.videos')}</h2>
+            <a href={localizedPath(locale, '/videos/')} class="text-sm text-ink-muted hover:text-ink no-underline">
+              {t(locale, 'common.view_all')} →
+            </a>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            {videos.map((v) => <VideoCard video={v} locale={locale} />)}
+          </div>
+        </section>
+      )}
+    </div>
+
+    <aside class="lg:sticky lg:top-6 self-start py-10">
+      <div class="mb-3">
+        <h2 class="text-xl font-semibold leading-tight">{t(locale, 'home.section.x')}</h2>
+        <a
+          href="https://twitter.com/sym_eme_outrea"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm text-ink-muted hover:text-ink no-underline"
+        >
+          @sym_eme_outrea →
+        </a>
+      </div>
+      <p class="text-sm text-ink-muted mb-4">{t(locale, 'home.section.x.note')}</p>
+      <XTimeline handle="sym_eme_outrea" locale={locale} />
+    </aside>
+  </div>
+</Layout>
