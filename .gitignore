@@ -9,3 +9,7 @@ drafts/
 .env.local
 .DS_Store
 .vscode/
+# Office lock files (created when a doc is open)
+~$*.pptx
+~$*.docx
+~$*.xlsx
