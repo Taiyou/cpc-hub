@@ -1,0 +1,46 @@
+---
+import Layout from '../Layout.astro';
+import ArticleCard, { type ArticleItem } from '../ArticleCard.astro';
+import { t, type Locale } from '../../i18n';
+import notesData from '../../data/notes.json';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const items = (notesData.items ?? []) as ArticleItem[];
+const fetchedAt = notesData.fetchedAt as string | null;
+const fmtDateTime = (iso: string) =>
+  new Date(iso).toLocaleString(locale === 'ja' ? 'ja-JP' : 'en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+---
+<Layout
+  locale={locale}
+  pathWithoutLocale="/articles/"
+  title={t(locale, 'articles.heading')}
+>
+  <header class="py-8 border-b border-neutral-200 mb-8">
+    <h1 class="text-3xl font-semibold mb-2">{t(locale, 'articles.heading')}</h1>
+    <p class="text-ink-muted">{t(locale, 'articles.intro')}</p>
+    {fetchedAt && (
+      <p class="text-xs text-ink-muted mt-3">
+        {t(locale, 'articles.last_updated')}: {fmtDateTime(fetchedAt)}
+      </p>
+    )}
+  </header>
+
+  {items.length === 0 ? (
+    <p class="text-ink-muted">{t(locale, 'articles.empty')}</p>
+  ) : (
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((a) => <ArticleCard article={a} locale={locale} />)}
+    </div>
+  )}
+</Layout>

@@ -5,7 +5,9 @@ import PaperCard from '../PaperCard.astro';
 import LabCard from '../LabCard.astro';
 import EventCard from '../EventCard.astro';
 import VideoCard, { type VideoItem } from '../VideoCard.astro';
+import ArticleCard, { type ArticleItem } from '../ArticleCard.astro';
 import videosData from '../../data/videos.json';
+import notesData from '../../data/notes.json';
 import { t, type Locale } from '../../i18n';
 
 interface Props {
@@ -23,6 +25,9 @@ const events = (await getCollection('events')).sort(
 );
 const videos = ((videosData.items ?? []) as VideoItem[]).slice().sort(
   (a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt)
+);
+const articles = ((notesData.items ?? []) as ArticleItem[]).slice().sort(
+  (a, b) => +new Date(b.publishedAt || 0) - +new Date(a.publishedAt || 0)
 );
 
 const norm = (s: string | undefined | null) => (s ?? '').toLowerCase();
@@ -82,6 +87,10 @@ const videoHaystacks = videos.map((v) =>
   ]
     .map(norm)
     .join(' \n ')
+);
+
+const articleHaystacks = articles.map((a) =>
+  [a.title, a.excerpt, a.author].map(norm).join(' \n ')
 );
 ---
 <Layout
@@ -146,6 +155,11 @@ const videoHaystacks = videos.map((v) =>
             class="px-3 py-1 rounded-full border border-neutral-300 text-ink-muted hover:border-ink hover:text-ink"
             data-filter="videos"
           >{t(locale, 'search.filter.videos')}</button>
+          <button
+            type="button"
+            class="px-3 py-1 rounded-full border border-neutral-300 text-ink-muted hover:border-ink hover:text-ink"
+            data-filter="articles"
+          >{t(locale, 'search.filter.articles')}</button>
         </div>
         <span class="ml-auto text-sm text-ink-muted" id="result-count" aria-live="polite"></span>
       </div>
@@ -211,6 +225,20 @@ const videoHaystacks = videos.map((v) =>
       ))}
     </div>
   </section>
+
+  <section data-section="articles" class="mb-10">
+    <h2 class="text-sm uppercase tracking-wider text-ink-muted mb-4">
+      {t(locale, 'search.section.articles')}
+      <span class="ml-1 text-ink-muted/70" data-section-count></span>
+    </h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {articles.map((a, i) => (
+        <div class="search-result" data-type="articles" data-haystack={articleHaystacks[i]}>
+          <ArticleCard article={a} locale={locale} />
+        </div>
+      ))}
+    </div>
+  </section>
 </Layout>
 
 <script is:inline define:vars={{ locale }}>
@@ -243,7 +271,7 @@ const videoHaystacks = videos.map((v) =>
     const apply = () => {
       const q = input.value.trim().toLowerCase();
       let visibleTotal = 0;
-      const counts = { papers: 0, labs: 0, events: 0, videos: 0 };
+      const counts = { papers: 0, labs: 0, events: 0, videos: 0, articles: 0 };
 
       for (const el of results) {
         const type = el.dataset.type;

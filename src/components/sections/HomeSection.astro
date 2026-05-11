@@ -5,9 +5,11 @@ import PaperCard from '../PaperCard.astro';
 import LabCard from '../LabCard.astro';
 import EventCard from '../EventCard.astro';
 import VideoCard, { type VideoItem } from '../VideoCard.astro';
+import ArticleCard, { type ArticleItem } from '../ArticleCard.astro';
 import XTimeline from '../XTimeline.astro';
 import CPCAnimation from '../CPCAnimation.astro';
 import videosData from '../../data/videos.json';
+import notesData from '../../data/notes.json';
 import { localizedPath, t, type Locale } from '../../i18n';
 
 interface Props {
@@ -29,6 +31,7 @@ const events = (await getCollection('events'))
   .slice(0, 3);
 
 const videos = ((videosData.items ?? []) as VideoItem[]).slice(0, 3);
+const articles = ((notesData.items ?? []) as ArticleItem[]).slice(0, 3);
 ---
 <Layout locale={locale} pathWithoutLocale="/">
   <section class="py-10 sm:py-14 border-b border-neutral-200">
@@ -61,6 +64,20 @@ const videos = ((videosData.items ?? []) as VideoItem[]).slice(0, 3);
           {papers.map((p) => <PaperCard paper={p} locale={locale} />)}
         </div>
       </section>
+
+      {articles.length > 0 && (
+        <section class="py-10 border-t border-neutral-200">
+          <div class="flex items-baseline justify-between mb-5">
+            <h2 class="text-xl font-semibold">{t(locale, 'home.section.articles')}</h2>
+            <a href={localizedPath(locale, '/articles/')} class="text-sm text-ink-muted hover:text-ink no-underline">
+              {t(locale, 'common.view_all')} →
+            </a>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            {articles.map((a) => <ArticleCard article={a} locale={locale} />)}
+          </div>
+        </section>
+      )}
 
       <section class="py-10 border-t border-neutral-200">
         <div class="flex items-baseline justify-between mb-5">

@@ -10,13 +10,17 @@ interface Props {
 const { locale, pathWithoutLocale } = Astro.props;
 
 const navItems = [
+  { key: 'nav.home', href: '/' },
   { key: 'nav.papers', href: '/papers/' },
   { key: 'nav.labs', href: '/labs/' },
   { key: 'nav.events', href: '/events/' },
   { key: 'nav.videos', href: '/videos/' },
+  { key: 'nav.articles', href: '/articles/' },
 ] as const;
 
 const currentPath = pathWithoutLocale;
+const isActive = (href: string) =>
+  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 ---
 <header class="border-b border-neutral-200 bg-white">
   <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
@@ -29,7 +33,7 @@ const currentPath = pathWithoutLocale;
     <nav class="flex items-center gap-6 text-sm">
       {navItems.map((item) => {
         const href = localizedPath(locale, item.href);
-        const active = currentPath.startsWith(item.href);
+        const active = isActive(item.href);
         return (
           <a
             href={href}

@@ -10,7 +10,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "fetch:youtube": "node scripts/fetch-youtube.mjs",
-    "update:videos": "node scripts/fetch-youtube.mjs && astro build"
+    "fetch:note": "node scripts/fetch-note.mjs",
+    "fetch:all": "node scripts/fetch-youtube.mjs && node scripts/fetch-note.mjs",
+    "update:videos": "node scripts/fetch-youtube.mjs && astro build",
+    "update:content": "pnpm fetch:all && astro build"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",

@@ -22,7 +22,7 @@
   <array>
     <string>/bin/sh</string>
     <string>-c</string>
-    <string>cd "/Users/hirotaiyohamada/Desktop/05_論文・研究/CPCメディアアーキテクト" &amp;&amp; /usr/local/bin/pnpm update:videos</string>
+    <string>cd "/Users/hirotaiyohamada/Desktop/05_論文・研究/CPCメディアアーキテクト" &amp;&amp; /usr/local/bin/pnpm update:content</string>
   </array>
 
   <key>StartInterval</key>

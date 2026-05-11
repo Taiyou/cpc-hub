@@ -1,0 +1,60 @@
+---
+import type { Locale } from '../i18n';
+import { t } from '../i18n';
+
+export interface ArticleItem {
+  id: string;
+  url: string;
+  title: string;
+  author: string;
+  publishedAt: string | null;
+  excerpt: string;
+  thumbnail: string | null;
+}
+
+interface Props {
+  article: ArticleItem;
+  locale: Locale;
+}
+
+const { article, locale } = Astro.props;
+const fmt = (iso: string | null) =>
+  iso
+    ? new Date(iso).toLocaleDateString(locale === 'ja' ? 'ja-JP' : 'en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    : '';
+---
+<a
+  href={article.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="block border border-neutral-200 rounded-lg overflow-hidden hover:border-ink transition-colors no-underline group"
+>
+  {article.thumbnail && (
+    <div class="aspect-[16/9] bg-neutral-100 overflow-hidden">
+      <img
+        src={article.thumbnail}
+        alt=""
+        loading="lazy"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  )}
+  <div class="p-5">
+    <div class="text-xs uppercase tracking-wider text-ink-muted mb-1">
+      note · {article.author}{article.publishedAt && ` · ${fmt(article.publishedAt)}`}
+    </div>
+    <h3 class="text-base font-semibold leading-snug mb-2 group-hover:underline line-clamp-3">
+      {article.title}
+    </h3>
+    {article.excerpt && (
+      <p class="text-sm text-ink-muted leading-relaxed line-clamp-3">
+        {article.excerpt}
+      </p>
+    )}
+    <p class="text-xs text-ink-muted mt-3">{t(locale, 'articles.read')} →</p>
+  </div>
+</a>
