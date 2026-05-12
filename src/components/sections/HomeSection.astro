@@ -35,20 +35,7 @@ const articles = ((notesData.items ?? []) as ArticleItem[]).slice(0, 3);
 ---
 <Layout locale={locale} pathWithoutLocale="/">
   <section class="py-10 sm:py-14 border-b border-neutral-200">
-    <div class="grid items-center gap-8 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-12">
-      <div>
-        <p class="text-sm uppercase tracking-widest text-ink-muted mb-3">CPC Hub</p>
-        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.1] mb-5">
-          {t(locale, 'home.hero.heading')}
-        </h1>
-        <p class="text-lg text-ink-muted leading-relaxed">
-          {t(locale, 'home.hero.body')}
-        </p>
-      </div>
-      <div class="md:max-w-md md:mx-auto w-full">
-        <CPCAnimation locale={locale} />
-      </div>
-    </div>
+    <CPCAnimation locale={locale} />
   </section>
 
   <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
