@@ -5,6 +5,9 @@ Astro による静的サイトで、論文・研究室・イベント・YouTube 
 
 > A bilingual hub for Collective Predictive Coding research — papers, labs, events, and curated YouTube videos.
 
+<img width="1056" height="1040" alt="スクリーンショット 2026-05-12 14 12 57" src="https://github.com/user-attachments/assets/22a6a98c-e476-4fd8-9aca-d890b45ae128" />
+
+
 ## 主な機能
 
 - **論文 / 研究室 / イベント** — Markdown frontmatter で管理（[`content/`](content/)）
