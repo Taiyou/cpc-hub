@@ -29,6 +29,11 @@ const papers = defineCollection({
     date_added: z.date(),
     contributor: z.string().optional(),
     featured: z.boolean().default(false),
+    // Marker set ONLY by scripts/sync-papers-from-notion.mjs.
+    // The sync script only deletes files that have this flag set to true.
+    // Do NOT set this on hand-curated papers — that would make them
+    // deletable by the next sync run.
+    notion_synced: z.boolean().optional(),
   }),
 });
 

@@ -1,0 +1,72 @@
+name: Papers pipeline
+
+# Daily cron: fetch new arXiv papers into Notion, then sync approved
+# Notion rows into content/papers/*.md and commit any diff.
+#
+# Manual trigger: workflow_dispatch (run on demand from the Actions tab).
+#
+# Required repository secrets:
+#   NOTION_TOKEN  — Internal Integration token (starts with ntn_)
+#   NOTION_DB_ID  — Database ID for "CPC Papers" (32 hex chars)
+
+on:
+  schedule:
+    # 03:17 UTC = 12:17 JST. Avoid round-hour to dodge GitHub cron congestion.
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      skip_fetch:
+        description: 'Skip arXiv fetch (Notion → site only)'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: papers-pipeline
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch arXiv → Notion
+        if: ${{ github.event.inputs.skip_fetch != 'true' }}
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+        run: pnpm fetch:arxiv
+
+      - name: Sync Notion → content/papers
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+        run: pnpm sync:papers
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name  "cpc-hub-bot"
+          git config user.email "cpc-hub-bot@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain content/papers)" ]]; then
+            git add content/papers
+            git commit -m "chore(papers): sync from Notion [skip ci]"
+            git push
+          else
+            echo "No paper changes."
+          fi
