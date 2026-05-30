@@ -1,13 +1,14 @@
 name: Papers pipeline
 
-# Daily cron: fetch new arXiv papers into Notion, then sync approved
-# Notion rows into content/papers/*.md and commit any diff.
+# Daily cron: fetch new arXiv papers into Notion, sync approved Notion
+# rows into content/papers/*.md, refresh YouTube videos, and commit any diff.
 #
 # Manual trigger: workflow_dispatch (run on demand from the Actions tab).
 #
 # Required repository secrets:
-#   NOTION_TOKEN  — Internal Integration token (starts with ntn_)
-#   NOTION_DB_ID  — Database ID for "CPC Papers" (32 hex chars)
+#   NOTION_TOKEN     — Internal Integration token (starts with ntn_)
+#   NOTION_DB_ID     — Database ID for "CPC Papers" (32 hex chars)
+#   YOUTUBE_API_KEY  — YouTube Data API v3 key
 
 on:
   schedule:
@@ -54,14 +55,19 @@ jobs:
           NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
         run: npm run sync:papers
 
+      - name: Fetch YouTube → videos.json
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: npm run fetch:youtube
+
       - name: Commit & push if changed
         run: |
           git config user.name  "cpc-hub-bot"
           git config user.email "cpc-hub-bot@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain content/papers)" ]]; then
-            git add content/papers
-            git commit -m "chore(papers): sync from Notion [skip ci]"
+          if [[ -n "$(git status --porcelain content/papers src/data/videos.json)" ]]; then
+            git add content/papers src/data/videos.json
+            git commit -m "chore(content): sync papers + YouTube [skip ci]"
             git push
           else
-            echo "No paper changes."
+            echo "No content changes."
           fi
