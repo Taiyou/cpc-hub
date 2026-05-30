@@ -1,12 +1,10 @@
 # symbol-emergence hub
 
-Collective Predictive Coding（CPC・集合的予測符号化）研究のためのバイリンガル（日本語 / 英語）ハブサイト。
+Symbol-emergenceやCollective Predictive Coding（CPC・集合的予測符号化）研究のためのバイリンガル（日本語 / 英語）ハブサイト。
 Astro による静的サイトで、論文・研究室・イベント・YouTube 動画を横断的にキュレーションする。
 
 > A bilingual hub for Collective Predictive Coding research — papers, labs, events, and curated YouTube videos.
-
-<img width="1056" height="1040" alt="スクリーンショット 2026-05-12 14 12 57" src="https://github.com/user-attachments/assets/22a6a98c-e476-4fd8-9aca-d890b45ae128" />
-
+<img width="1020" height="572" alt="スクリーンショット 2026-05-31 7 16 27" src="https://github.com/user-attachments/assets/7307a20a-e509-449a-8599-f2c0738c595f" />
 
 ## 主な機能
 
