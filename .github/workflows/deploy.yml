@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Redeploy after the Papers pipeline commits new content. Its sync commits
+  # carry [skip ci], so a push trigger alone never rebuilds the site.
+  workflow_run:
+    workflows: ["Papers pipeline"]
+    types: [completed]
 
 permissions:
   contents: read
@@ -16,6 +21,9 @@ concurrency:
 
 jobs:
   build:
+    # For workflow_run, only deploy when the Papers pipeline succeeded.
+    # push / workflow_dispatch always run.
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
