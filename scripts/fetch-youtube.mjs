@@ -8,7 +8,12 @@ const ROOT = resolve(__dirname, '..');
 const OUTPUT = resolve(ROOT, 'src/data/videos.json');
 const ENV_FILE = resolve(ROOT, '.env');
 
-const QUERIES = ['Collective Predictive Coding', '記号創発', 'CPC仮説'];
+const QUERIES = [
+  'Collective Predictive Coding',
+  '集合的予測符号化',
+  '記号創発',
+  'CPC仮説',
+];
 const PER_QUERY = 25;
 const TOP_N = 10;
 

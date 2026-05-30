@@ -1,11 +1,37 @@
 {
-  "fetchedAt": "2026-05-10T18:38:01.026Z",
+  "fetchedAt": "2026-05-30T21:35:46.896Z",
   "queries": [
     "Collective Predictive Coding",
+    "集合的予測符号化",
     "記号創発",
     "CPC仮説"
   ],
   "items": [
+    {
+      "videoId": "ypBD3nc2j78",
+      "title": "対談バトル！ アテンション・エコノミー時代の科学コミュニケーションとは？【丸山隆一 vs スズキ】",
+      "description": "アテンション・エコノミー時代のいま、そして、これからの科学コミュニケーションはどうあるべきか、メタサイエンス ...",
+      "channelTitle": "TANICHU NEVER KNOWS (Tadahiro Taniguchi)",
+      "channelId": "UCqDrijAYiRnC_RwbanZk6Jg",
+      "publishedAt": "2026-05-29T09:00:27Z",
+      "thumbnail": "https://i.ytimg.com/vi/ypBD3nc2j78/mqdefault.jpg",
+      "matchedQueries": [
+        "集合的予測符号化"
+      ]
+    },
+    {
+      "videoId": "sVmNmRA1DHs",
+      "title": "対談バトル！ 著者襲来！ “予測誤差を食らう” ってなんなの？ 【行為する意識：吉田正俊 vs スズキ】",
+      "description": "「予測誤差を食らう」とは何なのか、『行為する意識』の著者のひとりである吉田さんに直撃インタビューました！ 0:00 スタート ...",
+      "channelTitle": "TANICHU NEVER KNOWS (Tadahiro Taniguchi)",
+      "channelId": "UCqDrijAYiRnC_RwbanZk6Jg",
+      "publishedAt": "2026-05-15T09:01:15Z",
+      "thumbnail": "https://i.ytimg.com/vi/sVmNmRA1DHs/mqdefault.jpg",
+      "matchedQueries": [
+        "集合的予測符号化",
+        "記号創発"
+      ]
+    },
     {
       "videoId": "Ip9NSvUOwcI",
       "title": "対談バトル！ 哲学は現代科学と協働できるのか？【平井靖史 vs スズキ】",
@@ -15,6 +41,7 @@
       "publishedAt": "2026-05-01T09:00:32Z",
       "thumbnail": "https://i.ytimg.com/vi/Ip9NSvUOwcI/mqdefault.jpg",
       "matchedQueries": [
+        "集合的予測符号化",
         "記号創発"
       ]
     },
@@ -27,6 +54,7 @@
       "publishedAt": "2026-04-17T09:01:23Z",
       "thumbnail": "https://i.ytimg.com/vi/pzN5yP4m8wQ/mqdefault.jpg",
       "matchedQueries": [
+        "集合的予測符号化",
         "記号創発"
       ]
     },
@@ -39,6 +67,7 @@
       "publishedAt": "2026-04-17T09:00:28Z",
       "thumbnail": "https://i.ytimg.com/vi/KNLVle8EQyw/mqdefault.jpg",
       "matchedQueries": [
+        "集合的予測符号化",
         "記号創発"
       ]
     },
@@ -51,6 +80,7 @@
       "publishedAt": "2026-04-03T09:00:00Z",
       "thumbnail": "https://i.ytimg.com/vi/7VkgGcQwjwI/mqdefault.jpg",
       "matchedQueries": [
+        "集合的予測符号化",
         "記号創発",
         "CPC仮説"
       ]
@@ -64,19 +94,8 @@
       "publishedAt": "2026-03-20T09:00:30Z",
       "thumbnail": "https://i.ytimg.com/vi/CqOe4ZH4Us8/mqdefault.jpg",
       "matchedQueries": [
+        "集合的予測符号化",
         "記号創発"
-      ]
-    },
-    {
-      "videoId": "OtgzpMXKv88",
-      "title": "Meet The Neuroscientist Proving We’re All Living In A Collective Consciousness",
-      "description": "Get A Full Breakdown Of Your Own Conscious Inner Experience (100% Free): ...",
-      "channelTitle": "Giant's Shoulder ",
-      "channelId": "UCqg8kzLCb8EmQkbWFLUfDiQ",
-      "publishedAt": "2026-03-16T17:00:39Z",
-      "thumbnail": "https://i.ytimg.com/vi/OtgzpMXKv88/mqdefault.jpg",
-      "matchedQueries": [
-        "Collective Predictive Coding"
       ]
     },
     {
@@ -113,20 +132,9 @@
       "thumbnail": "https://i.ytimg.com/vi/uOXNy6S2JKE/mqdefault.jpg",
       "matchedQueries": [
         "Collective Predictive Coding",
-        "記号創発"
-      ]
-    },
-    {
-      "videoId": "vAOfyd2rT2U",
-      "title": "なぜ言語は生まれたのか？ ロボット工学からのアプローチ【集合的予測符号化①】",
-      "description": "ロボット工学から言語の起源にアプローチした仮説について、藤井さんと語りました！ 【参考資料】 〇Taniguchi T, Yoshida Y, ...",
-      "channelTitle": "ゆる学徒カフェ・オープンマイク",
-      "channelId": "UCQdLfGZnFG-YpcWby-FIcFA",
-      "publishedAt": "2026-03-06T09:23:14Z",
-      "thumbnail": "https://i.ytimg.com/vi/vAOfyd2rT2U/mqdefault.jpg",
-      "matchedQueries": [
-        "Collective Predictive Coding",
-        "記号創発"
+        "集合的予測符号化",
+        "記号創発",
+        "CPC仮説"
       ]
     }
   ]
