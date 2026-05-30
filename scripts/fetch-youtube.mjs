@@ -43,6 +43,9 @@ async function searchOne(apiKey, query) {
     type: 'video',
     order: 'date',
     maxResults: String(PER_QUERY),
+    // Bias toward Japanese results so CI (US-region runners) surfaces the
+    // same videos as a JP client; without this, JP-only videos are dropped.
+    relevanceLanguage: 'ja',
     key: apiKey,
   });
   const url = `https://www.googleapis.com/youtube/v3/search?${params}`;
