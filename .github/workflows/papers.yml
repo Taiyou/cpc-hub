@@ -34,30 +34,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.0.9
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install --no-audit --no-fund
 
       - name: Fetch arXiv → Notion
         if: ${{ github.event.inputs.skip_fetch != 'true' }}
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
-        run: pnpm fetch:arxiv
+        run: npm run fetch:arxiv
 
       - name: Sync Notion → content/papers
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
-        run: pnpm sync:papers
+        run: npm run sync:papers
 
       - name: Commit & push if changed
         run: |
