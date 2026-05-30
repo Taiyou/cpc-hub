@@ -1,4 +1,4 @@
-// CPC Hub 運営体制の提案スライド
+// symbol-emergence hub 運営体制の提案スライド
 // 生成: node governance.js  →  CPC-Hub-運営体制.pptx
 import PptxGenJS from "pptxgenjs";
 
@@ -45,7 +45,7 @@ const slideNumber = (slide, n) => {
   const s = pres.addSlide();
   s.background = { color: "FFFFFF" };
 
-  s.addText("CPC Hub 運営体制の提案", {
+  s.addText("symbol-emergence hub 運営体制の提案", {
     x: 0.6, y: 2.4, w: W - 1.2, h: 1.0,
     fontSize: 40, fontFace: FONT, bold: true, color: INK, align: "center",
   });
@@ -60,7 +60,7 @@ const slideNumber = (slide, n) => {
     line: { color: ACCENT, width: 2 },
   });
 
-  s.addText("CPC Hub Maintainers", {
+  s.addText("symbol-emergence hub Maintainers", {
     x: 0.6, y: 4.6, w: W - 1.2, h: 0.4,
     fontSize: 14, fontFace: FONT, color: MUTED, align: "center",
   });
@@ -249,7 +249,7 @@ const slideNumber = (slide, n) => {
   const s = pres.addSlide();
   slideTitle(s, "1.  目的とビジョン");
 
-  s.addText("CPC Hub に情報を集約し、研究コミュニティの「最初の入口」になる。", {
+  s.addText("symbol-emergence hub に情報を集約し、研究コミュニティの「最初の入口」になる。", {
     x: 0.6, y: 1.35, w: W - 1.2, h: 0.6,
     fontSize: 20, fontFace: FONT, bold: true, color: ACCENT_DARK,
   });

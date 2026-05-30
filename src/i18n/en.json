@@ -1,5 +1,5 @@
 {
-  "site.title": "CPC Hub",
+  "site.title": "symbol-emergence hub",
   "site.tagline": "A bilingual hub for Collective Predictive Coding research",
   "nav.home": "Home",
   "nav.papers": "Papers",
@@ -11,7 +11,7 @@
   "nav.search": "Search",
   "search.heading": "Search",
   "search.placeholder": "Search papers, labs, events…",
-  "search.intro": "Filter across the whole CPC Hub. Searches titles, authors, tags, and summaries.",
+  "search.intro": "Filter across the whole symbol-emergence hub. Searches titles, authors, tags, and summaries.",
   "search.filter.all": "All",
   "search.filter.papers": "Papers",
   "search.filter.labs": "Labs",

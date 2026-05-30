@@ -1,4 +1,4 @@
-# CPC Hub
+# symbol-emergence hub
 
 Collective Predictive Coding（CPC・集合的予測符号化）研究のためのバイリンガル（日本語 / 英語）ハブサイト。
 Astro による静的サイトで、論文・研究室・イベント・YouTube 動画を横断的にキュレーションする。

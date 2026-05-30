@@ -1,4 +1,4 @@
-// CPC Hub 構成設計の概要 — slide deck generator
+// symbol-emergence hub 構成設計の概要 — slide deck generator
 // Run: node generate.js
 // Output: ./CPC-Hub-構成設計.pptx
 //
@@ -69,7 +69,7 @@ function bulletItems(items, opts = {}) {
   const s = pres.addSlide();
   s.background = { color: "FFFFFF" };
 
-  s.addText("CPC Hub", {
+  s.addText("symbol-emergence hub", {
     x: MARGIN_X, y: 1.6, w: SLIDE_W - MARGIN_X * 2, h: 0.9,
     fontSize: 48, fontFace: FONT, bold: true, color: INK, align: "center",
   });
