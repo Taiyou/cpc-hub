@@ -126,9 +126,23 @@ async function queryArxiv(searchQuery, attempt = 1) {
     sortOrder: 'descending',
   });
   const url = `${ARXIV_API}?${params.toString()}`;
-  const res = await fetch(url, {
-    headers: { 'User-Agent': 'cpc-hub-bot/1.0 (+https://github.com/)' },
-  });
+  let res;
+  try {
+    // arXiv's export API is flaky; without a timeout a hung request would
+    // block until the whole CI job times out (15 min). Bound it and retry.
+    res = await fetch(url, {
+      headers: { 'User-Agent': 'cpc-hub-bot/1.0 (+https://github.com/)' },
+      signal: AbortSignal.timeout(20000),
+    });
+  } catch (err) {
+    if (attempt < 4) {
+      const backoff = 5000 * Math.pow(2, attempt - 1); // 5s, 10s, 20s
+      console.log(`  ↻ ${err.name} — backing off ${backoff}ms (attempt ${attempt}/3)`);
+      await sleep(backoff);
+      return queryArxiv(searchQuery, attempt + 1);
+    }
+    throw err;
+  }
   if (res.status === 429 || res.status >= 500) {
     if (attempt < 4) {
       const backoff = 5000 * Math.pow(2, attempt - 1); // 5s, 10s, 20s

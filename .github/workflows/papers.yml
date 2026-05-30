@@ -29,7 +29,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  run:
+  # arXiv → Notion → content/papers. Isolated so a slow/flaky arXiv or
+  # Notion call can't block the YouTube refresh below.
+  papers:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -55,6 +57,36 @@ jobs:
           NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
         run: npm run sync:papers
 
+      - name: Commit & push if changed
+        run: |
+          git config user.name  "cpc-hub-bot"
+          git config user.email "cpc-hub-bot@users.noreply.github.com"
+          if [[ -z "$(git status --porcelain content/papers)" ]]; then
+            echo "No paper changes."; exit 0
+          fi
+          git add content/papers
+          git commit -m "chore(papers): sync from Notion [skip ci]"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push && exit 0
+            echo "push retry $i…"; sleep 3
+          done
+          exit 1
+
+  # YouTube → src/data/videos.json. Independent job so it always runs
+  # on the daily cron regardless of the papers job's outcome.
+  youtube:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
       - name: Fetch YouTube → videos.json
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -64,10 +96,13 @@ jobs:
         run: |
           git config user.name  "cpc-hub-bot"
           git config user.email "cpc-hub-bot@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain content/papers src/data/videos.json)" ]]; then
-            git add content/papers src/data/videos.json
-            git commit -m "chore(content): sync papers + YouTube [skip ci]"
-            git push
-          else
-            echo "No content changes."
+          if [[ -z "$(git status --porcelain src/data/videos.json)" ]]; then
+            echo "No video changes."; exit 0
           fi
+          git add src/data/videos.json
+          git commit -m "chore(videos): sync from YouTube [skip ci]"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push && exit 0
+            echo "push retry $i…"; sleep 3
+          done
+          exit 1
